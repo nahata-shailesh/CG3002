@@ -1,4 +1,5 @@
 import feature_extraction
+import segmentation
 import numpy as np
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 from sklearn.naive_bayes import GaussianNB
@@ -11,9 +12,9 @@ from sklearn.tree import DecisionTreeClassifier
 
 FEATURES_LIST = [
 	feature_extraction.energy,
-    feature_extraction.entropy,
+    # feature_extraction.entropy,
     feature_extraction.mean,
-    feature_extraction.stdev
+    feature_extraction.std_dev
 ]
 
 models = []
@@ -29,26 +30,38 @@ def extract_features(segments):
 	return feature_extraction.extract_features(segments, FEATURES_LIST)
 
 def train_model(model):
-    # train_segments = segmenting.load_segments('train_segments.txt')
-    train_features = extract_features(train_segments[:, 0])
-    train_labels = list(train_segments[:, 1])
+    train_segments = segmentation.load_segments('data.csv', 200, 100)
+
+    seg_features = []
+    seg_labels = []
+
+    for i in range(len(train_segments)):
+    	seg_features.append(train_segments[i][:, :3])
+    	seg_labels.append(train_segments[i][1, 3])
+
+    train_features = extract_features(seg_features)
+    train_labels = list(seg_labels)
 
     model.fit(train_features, train_labels)
 
     return model
 
-
 def test_model(name, model):
-    # test_segments = segmenting.load_segments('test_segments.txt')
-    test_features = extract_features(test_segments[:, 0])
-    test_labels = list(test_segments[:, 1])
+	test_segments = segmentation.load_segments('data.csv', 200, 100)
+	seg_features = []
+	seg_labels = []
+	for i in range(len(test_segments)):
+		seg_features.append(test_segments[i][:, :3])
+		seg_labels.append(test_segments[i][1, 3])
 
-    test_predictions = model.predict(test_features)
+	test_features = extract_features(seg_features)
+	test_labels = list(seg_labels)
 
-    print("%s: %f" % (name, accuracy_score(test_labels, test_predictions)))
-    print(confusion_matrix(test_labels, test_predictions))
-    print(classification_report(test_labels, test_predictions))
+	test_predictions = model.predict(test_features)
 
+	print("%s: %f" % (name, accuracy_score(test_labels, test_predictions)))
+    # print(confusion_matrix(test_labels, test_predictions))
+    # print(classification_report(test_labels, test_predictions))
 
 if __name__ == '__main__':
     

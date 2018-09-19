@@ -2,6 +2,8 @@ import numpy as np
 from scipy import stats
 
 def mean(segment):
+	# print(segment)
+	# print(np.mean(segment))
 	return np.mean(segment)
 
 def std_dev(segment):
@@ -19,5 +21,6 @@ def entropy(segment):
 def extract_features(segments, feature_funcs):
     def extract_features(segment):
         feature_lists = [feature_func(segment) for feature_func in feature_funcs]
-        return np.concatenate(feature_lists)
+        # print(feature_lists)
+        return np.array(feature_lists)
     return np.array([extract_features(segment) for segment in segments])
