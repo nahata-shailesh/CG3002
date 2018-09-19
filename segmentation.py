@@ -1,11 +1,9 @@
-
 #This function returns a list, each element in the list
 #contains data in specified window size
 
-def OverlapSegmentation(array, windowSize, overlap):    
+def overlap_segmentation(array, windowSize, overlap):    
 
     segment = []
     for i in range(int(len(array)/overlap)):
         segment.append(x[i*overlap:((i*overlap)+(windowSize)),0:])
     return segment 
-
