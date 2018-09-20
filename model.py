@@ -19,13 +19,13 @@ FEATURES_LIST = [
 ]
 
 models = []
-models.append(('KNN', KNeighborsClassifier()))
+# models.append(('KNN', KNeighborsClassifier()))
 models.append(('DT', DecisionTreeClassifier()))
-models.append(('NB', GaussianNB()))
-models.append(('SVM', SVC()))
+# models.append(('NB', GaussianNB()))
+# models.append(('SVM', SVC()))
 models.append(('RF', RandomForestClassifier()))
-models.append(('NN', MLPClassifier()))
-models.append(('ORC', OneVsRestClassifier(LinearSVC())))
+# models.append(('NN', MLPClassifier()))
+# models.append(('ORC', OneVsRestClassifier(LinearSVC())))
 
 def extract_features(segments):
     return feature_extraction.extract_features(segments, FEATURES_LIST)
@@ -38,11 +38,11 @@ def test_model(name, model, X_validation, Y_validation):
     test_predictions = model.predict(X_validation)
 
     print("%s: %f" % (name, accuracy_score(Y_validation, test_predictions)))
-    # print(confusion_matrix(Y_validation, test_predictions))
+    print(confusion_matrix(Y_validation, test_predictions))
     # print(classification_report(Y_validation, test_predictions))
 
 if __name__ == '__main__':
-    segments = segmentation.load_segments('data.csv', 100, 50)
+    segments = segmentation.load_segments('data.csv', 20, 10)
     seg_features = []
     seg_labels = []
 
@@ -53,20 +53,23 @@ if __name__ == '__main__':
     features = extract_features(seg_features)
     labels = list(seg_labels)
 
+    # print(np.array(features).shape)
+    # print(np.array(labels).shape)
+
     validation_size = 0.20
-    seed = 7
+    seed = 3
     X_train, X_validation, Y_train, Y_validation = model_selection.train_test_split(features, labels, test_size=validation_size, random_state=seed)
-    # print(X_train)
+    print(np.array(X_train).shape)
     # print(X_validation)
-    # print(Y_train)
+    print(np.array(Y_train).shape)
     # print(Y_validation)
 
 
     for name, model in models:
         train_model(model, X_train, Y_train)
         test_model(name, model, X_validation, Y_validation)
-    #     kfold = model_selection.KFold(n_splits=10, random_state=seed)
-    #     cv_results = model_selection.cross_val_score(model, X_train, Y_train, cv=kfold, scoring='accuracy')
-    #     msg = "%s: %f" % (name, cv_results.mean())
-    #     print(msg)
+        # kfold = model_selection.StratifiedKFold(n_splits=10, random_state=seed)
+        # cv_results = model_selection.cross_val_score(model, X_train, Y_train, cv=kfold, scoring='accuracy')
+        # msg = "%s: %f" % (name, cv_results.mean())
+        # print(msg)
 
