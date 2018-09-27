@@ -87,7 +87,7 @@ void task1(void *p) {
   const TickType_t xFrequency = 50;
 
   // Initialise the xLastWakeTime variable with the current time.
-  //xLastWakeTime = xTaskGetTickCount();
+  xLastWakeTime = xTaskGetTickCount();
     
   // initiate data transfer
   while (dataflag) {
@@ -178,7 +178,7 @@ void buildMessage() {
   // Concatenate processed sensor data to msgBuffer
   
   /* Accelerometer 1*/
-  dtostrf(gForceX1, 2, 2, gforceX1_m);
+  dtostrf(gForceX1, 3, 2, gforceX1_m);
   strcat(msgBuffer, gforceX1_m);
   strcat(msgBuffer, ",");
   
@@ -204,7 +204,7 @@ void buildMessage() {
   strcat(msgBuffer, ",");
 
   /* Accelerometer 2*/
-  dtostrf(gForceX2, 2, 2, gforceX2_m);
+  dtostrf(gForceX2, 3, 2, gforceX2_m);
   strcat(msgBuffer, gforceX2_m);
   strcat(msgBuffer, ",");
   
