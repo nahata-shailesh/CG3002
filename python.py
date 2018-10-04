@@ -118,48 +118,53 @@ while (hsflag == 0):
 print("Handshake done!")
 
 
-
+port.write(sendData)
+port.reset_output_buffer()
 while(dataflag):
         port.write(sendData)
-        port.reset_output_buffer()
         message = port.readline().decode('utf-8','ignore')
-        readEndTime = current_milli_time()
-        print("Message:", message)
+       
+        if message:
+            port.write(sendData)
+            port.reset_output_buffer()
+            readEndTime = current_milli_time()
+            print("Message:", message)
+            sentFrameID = int(message.split(',',1)[0])
     
-        sentFrameID = int(message.split(',',1)[0])
-    
-        msgCheckSum = int((message.rsplit(',', 1)[1])[:-2])
-        message = message.rsplit(',', 1)[0]
-        byteMessage = bytearray(message, 'utf-8')
+            msgCheckSum = int((message.rsplit(',', 1)[1])[:-2])
+            message = message.rsplit(',', 1)[0]
+            byteMessage = bytearray(message, 'utf-8')
           
-        if(sentFrameID >= (prevFrameID + 1)): #frameID is correct
-          prevFrameID = sentFrameID
-          while (chksumCounter < len(byteMessage)):
-            computedChksum ^= int(byteMessage[chksumCounter])
-            chksumCounter += 1
-          if (computedChksum == msgCheckSum):  #checksum is correct
-            print("Matching Checksums")
-            processDataFlag = 1
-          else: #checksum is wrong
-            numFrameDropped += 1
-            processDataFlag = 0; #frame is droppped
-            print("Checksum error!", "Message Checksum: ", msgCheckSum, "Generated Checksum: ", computedChksum)
-            print(' ')
+            if(sentFrameID >= (prevFrameID + 1)): #frameID is correct
+                prevFrameID = sentFrameID
+                while (chksumCounter < len(byteMessage)):
+                    computedChksum ^= int(byteMessage[chksumCounter])
+                    chksumCounter += 1
+                if (computedChksum == msgCheckSum):  #checksum is correct
+                    print("Matching Checksums")
+                    processDataFlag = 1
+                    if (sentFrameID % 4 == 0):
+                        port.reset_input_buffer()
+                        print("input buffer reset")  #debug if input buffer is reset
+                else: #checksum is wrong
+                    numFrameDropped += 1
+                    processDataFlag = 0; #frame is droppped
+                    print("Checksum error!", "Message Checksum: ", msgCheckSum, "Generated Checksum: ", computedChksum)
+                    print(' ')
           
-        else: #Same or prev frameID
-          numFrameDropped += 1
-          processDataFlag = 0
-          print('Mismatch ID!', 'Old ID: ', prevFrameID, 'New ID: ', sentFrameID)
-          print(' ')
-        
+            else: #Same or prev frameID
+                numFrameDropped += 1
+                processDataFlag = 0
+                print('Mismatch ID!', 'Old ID: ', prevFrameID, 'New ID: ', sentFrameID)
+                print(' ')
+
         processDataFlag = 0
         computedChksum = 0
         chksumCounter = 0
         prevFrameID = sentFrameID
         #print("Debug Loop: ", ignoreLoopCount, "Reading has taken: ", readEndTime - readTime, "ms", "Others have taken: ", current_milli_time()-readEndTime, "ms")
         print("Number of frames dropped: ", numFrameDropped)
-        time.sleep(0.1)
-
+        time.sleep(0)
 
 
 
