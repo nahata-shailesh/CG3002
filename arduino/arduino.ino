@@ -150,8 +150,8 @@ void task1(void *p) {
         // Increment frameID and Re-initialize checksum
         frameID++;
         checksum = 0;     
-        vTaskDelayUntil(&xLastWakeTime, xFrequency);
       }
+      vTaskDelayUntil(&xLastWakeTime, xFrequency);
       Serial1.flush();
     }
   }
