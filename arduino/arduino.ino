@@ -97,21 +97,21 @@ void task1(void *p) {
     
     if (readByte == 'D') {
       readByte=0;
+      
+      // Clear the data buffer
+      strcpy(msgBuffer, "");
+  
+      // Add Frame ID to the start of the message string
+      itoa(frameID, frameID_m, 10); // itoa() is used to convert a number into a string, using base10
+      Serial.print("Sending frame: ");
+      Serial.println(frameID);  
+      strcpy(msgBuffer, frameID_m);
+      strcat(msgBuffer, ",");
+      strcat(msgBuffer, "\n");
+      
 
       xLastWakeTime = xTaskGetTickCount();
-      for (int i=0; i<4 ; i++) {
-      
-        // Clear the data buffer
-        strcpy(msgBuffer, "");
-    
-        // Add Frame ID to the start of the message string
-        itoa(frameID, frameID_m, 10); // itoa() is used to convert a number into a string, using base10
-        Serial.print("Sending frame: ");
-        Serial.println(frameID);  
-        strcpy(msgBuffer, frameID_m);
-        strcat(msgBuffer, ",");
-      
-     
+      for (int i=0; i<4 ; i++) {  
         //read and process power readings
         getPowerReadings();
         
@@ -125,34 +125,49 @@ void task1(void *p) {
       
         // Create the message to be sent to RPi3
         buildMessage();
+        strcat(msgBuffer, "\n");
     
-        // Append checksum at the back of the msgBuffer
-        len = strlen(msgBuffer);
-        for (int i=0; i<len ; i++) {
-          checksum ^= msgBuffer[i];
-        }
-        app_checksum = (int)checksum;
-        itoa(app_checksum, checksum_m, 10);
-        strcat(msgBuffer, ",");
-        strcat(msgBuffer, checksum_m);
-    
-        // Append newline character and Obtain final length of message string
-        len2 = strlen(msgBuffer);
-        msgBuffer[len2+1] = '\n';
-        int msgLength = 0;
-            
-        //send the created message 
-        while (msgLength < (len2 + 2)) {
-          Serial1.write(msgBuffer[msgLength]);
-          msgLength++;
-        }
-        
-        // Increment frameID and Re-initialize checksum
-        frameID++;
-        checksum = 0;     
+        vTaskDelayUntil(&xLastWakeTime, (50 / portTICK_PERIOD_MS)); //50 millisecond 
       }
-      vTaskDelayUntil(&xLastWakeTime, xFrequency);
-      Serial1.flush();
+
+      //Serial.println(msgBuffer);
+      // Calculate checksum at the back of the msgBuffer
+      len = strlen(msgBuffer);
+      for (int i=0; i<len ; i++) {
+        checksum ^= msgBuffer[i];
+      }
+      // Append checksum
+      app_checksum = (int)checksum;
+      itoa(app_checksum, checksum_m, 10);
+      strcat(msgBuffer, checksum_m);
+      
+      // Append newline character and Obtain final length of message string
+      len2 = strlen(msgBuffer);
+      msgBuffer[len2+1] = '\n';
+      msgBuffer[len2+2] = '\r';
+      int msgLength = strlen(msgBuffer);
+      int index = 0;
+          
+      //send the created message 
+      while (index < (msgLength + 1)) {
+        Serial1.write(msgBuffer[index]);
+        index++;
+      }    
+      // Increment frameID and Re-initialize checksum
+      frameID++;
+      checksum = 0;       
+      //Serial1.flush();
+
+      /**********************/
+      /*    Message Format
+      /**********************/
+      /*  
+       *  FrameID,\n<<16 DATA_VALUES>>,\n<<16 DATA_VALUES>>,\n<<16 DATA_VALUES>>,\n<<16 DATA_VALUES>>,\nchkSum\n\r     
+       *                                                                                               ^
+       *                                                                                               |
+       *                                                                                               |
+       *                                             Note: Checksum is a Logical ORR from FrameID to '\n'
+       */
     }
   }
 }
@@ -228,6 +243,7 @@ void buildMessage() {
 
   dtostrf(rotZ2, 3, 2, rotZ2_m); 
   strcat(msgBuffer, rotZ2_m);
+  strcat(msgBuffer, ",");
 }
 
 void handshake() {
