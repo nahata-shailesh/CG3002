@@ -84,7 +84,7 @@ void task1(void *p) {
   unsigned int len = 0;
   unsigned int len2;
   TickType_t xLastWakeTime;
-  const TickType_t xFrequency = 12;
+  const TickType_t xFrequency = 50;
 
   // Initialise the xLastWakeTime variable with the current time.
   xLastWakeTime = xTaskGetTickCount();
