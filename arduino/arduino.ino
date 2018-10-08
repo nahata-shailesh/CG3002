@@ -84,7 +84,7 @@ void task1(void *p) {
   unsigned int len = 0;
   unsigned int len2;
   TickType_t xLastWakeTime;
-  const TickType_t xFrequency = 50;
+  //const TickType_t xFrequency = 50;
 
   // Initialise the xLastWakeTime variable with the current time.
   xLastWakeTime = xTaskGetTickCount();
@@ -103,8 +103,8 @@ void task1(void *p) {
   
       // Add Frame ID to the start of the message string
       itoa(frameID, frameID_m, 10); // itoa() is used to convert a number into a string, using base10
-      Serial.print("Sending frame: ");
-      Serial.println(frameID);  
+      //Serial.print("Sending frame: ");
+      //Serial.println(frameID);  
       strcpy(msgBuffer, frameID_m);
       strcat(msgBuffer, ",");
       strcat(msgBuffer, "\n");
@@ -127,10 +127,9 @@ void task1(void *p) {
         buildMessage();
         strcat(msgBuffer, "\n");
     
-        vTaskDelayUntil(&xLastWakeTime, (50 / portTICK_PERIOD_MS)); //50 millisecond 
+        vTaskDelayUntil(&xLastWakeTime, (50 / portTICK_PERIOD_MS)); //10 millisecond 
       }
 
-      //Serial.println(msgBuffer);
       // Calculate checksum at the back of the msgBuffer
       len = strlen(msgBuffer);
       for (int i=0; i<len ; i++) {
@@ -143,30 +142,27 @@ void task1(void *p) {
       
       // Append newline character and Obtain final length of message string
       len2 = strlen(msgBuffer);
-      msgBuffer[len2+1] = '\n';
-      msgBuffer[len2+2] = '\r';
-      int msgLength = strlen(msgBuffer);
-      int index = 0;
-          
-      //send the created message 
-      while (index < (msgLength + 1)) {
-        Serial1.write(msgBuffer[index]);
-        index++;
-      }    
+      msgBuffer[len2+1] = '\r';
+
+      // Send the message buffer    
+      for (int j = 0; j<len2+2; j++) {
+        Serial1.write(msgBuffer[j]);
+      }
+      
       // Increment frameID and Re-initialize checksum
       frameID++;
-      checksum = 0;       
+      checksum = 0;     
       //Serial1.flush();
 
       /**********************/
       /*    Message Format
       /**********************/
       /*  
-       *  FrameID,\n<<16 DATA_VALUES>>,\n<<16 DATA_VALUES>>,\n<<16 DATA_VALUES>>,\n<<16 DATA_VALUES>>,\nchkSum\n\r     
-       *                                                                                               ^
-       *                                                                                               |
-       *                                                                                               |
-       *                                             Note: Checksum is a Logical ORR from FrameID to '\n'
+       *  <<FrameID,\n<<16 DATA_VALUES>>,\n<<16 DATA_VALUES>>,\n<<16 DATA_VALUES>>,\n<<16 DATA_VALUES>>,\nchkSum\r>>     
+       *                                                                                                 ^
+       *                                                                                                 |
+       *                                                                                                 |
+       *                                               Note: Checksum is a Logical ORR from FrameID to '\n'
        */
     }
   }
