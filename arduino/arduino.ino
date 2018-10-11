@@ -50,7 +50,7 @@ float gForceX2, gForceY2, gForceZ2;
 float rotX2, rotY2, rotZ2;
 
 /* Variables for processing raw data */
-float current, voltage, power, energy;
+float current=0, voltage=0, power=0, energy=0;
 
 // Variables for building message string
 char gforceX1_m[5], gforceY1_m[5], gforceZ1_m[5];
@@ -127,7 +127,7 @@ void task1(void *p) {
         buildMessage();
         strcat(msgBuffer, "\n");
     
-        vTaskDelayUntil(&xLastWakeTime, (50 / portTICK_PERIOD_MS)); //10 millisecond 
+        vTaskDelayUntil(&xLastWakeTime, (50 / portTICK_PERIOD_MS)); //50 millisecond 
       }
 
       // Calculate checksum at the back of the msgBuffer
@@ -265,20 +265,6 @@ void initializeSensors() {
 
     accelgyro.initialize();
     accelgyro1.initialize();
-
-    accelgyro.setXAccelOffset(562);
-    accelgyro.setYAccelOffset(1626);
-    accelgyro.setZAccelOffset(1412);
-    accelgyro.setXGyroOffset(80);
-    accelgyro.setYGyroOffset(35);
-    accelgyro.setZGyroOffset(59);
-
-    accelgyro1.setXAccelOffset(-449);
-    accelgyro1.setYAccelOffset(-594);
-    accelgyro1.setZAccelOffset(2249);
-    accelgyro1.setXGyroOffset(-8);
-    accelgyro1.setYGyroOffset(7);
-    accelgyro1.setZGyroOffset(5);
   
 }
 
