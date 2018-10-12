@@ -57,7 +57,7 @@ char gforceX1_m[5], gforceY1_m[5], gforceZ1_m[5];
 char rotX1_m[5], rotY1_m[5], rotZ1_m[5];
 char gforceX2_m[5], gforceY2_m[5], gforceZ2_m[5];
 char rotX2_m[5], rotY2_m[5], rotZ2_m[5];
-char current_m[5], voltage_m[3], power_m[5], energy_m[5];
+char current_m[5], voltage_m[3], power_m[5], energy_m[8];
 
 void setup() {
   // initialize both serial ports:
@@ -183,7 +183,7 @@ void buildMessage() {
   strcat(msgBuffer, power_m);
   strcat(msgBuffer, ",");
 
-  dtostrf(energy, 3, 2, energy_m);
+  dtostrf(energy, 6, 2, energy_m);
   strcat(msgBuffer, energy_m); 
   strcat(msgBuffer, ",");
   
