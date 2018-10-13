@@ -6,37 +6,29 @@
 
 import numpy as np
 import pandas as pd
+from scipy import stats
 import csv
 
 
 # In[2]:
 
 
-root_path= '/Users/tingtingx/Documents/CEG4/SEM1/CG3002/ML_Code/HMP_Dataset/'
-folder = ['Brush_teeth/','Comb_hair/','Drink_glass/']
-file = [['Accelerometer-2011-04-11-13-28-18-brush_teeth-f1.txt',
-       'Accelerometer-2011-04-11-13-29-54-brush_teeth-f1.txt',
-       'Accelerometer-2011-05-30-21-55-04-brush_teeth-m2.txt'],
-       ['Accelerometer-2011-05-30-08-32-58-comb_hair-f1.txt',
-       'Accelerometer-2011-06-02-10-41-33-comb_hair-f1.txt',
-       'Accelerometer-2011-06-02-16-56-03-comb_hair-f4.txt'],
-       ['Accelerometer-2011-06-02-17-30-51-drink_glass-m1.txt',
-       'Accelerometer-2012-03-23-03-54-54-drink_glass-m9.txt',
-       'Accelerometer-2012-03-26-04-56-11-drink_glass-f2.txt']]
+folder = "/Users/tingtingx/Documents/CEG4/SEM1/CG3002/ML_Code/train_raw_data/"
+file = ['wiper','number7','chicken','sidestep','turnclap']
 
 
 # In[3]:
 
 
 #apply overlaping sliding window
-def load_segments(file_name, activity, window_size, overlap):
-    df = pd.read_table(file_name, sep=' ',header =None)
-    data = df.values
+def load_segments(file_name, window_size, overlap):
+    df = pd.read_csv(file_name,header =None)
+    data = df.values #change to numpy array
     data_seg = []
     label_seg = []
     for i in range(int(len(data)/overlap)):
-        data_seg.append(data[i*overlap:((i*overlap)+(window_size)),0:3])
-        label_seg.append(activity)
+        data_seg.append(data[i*overlap:((i*overlap)+(window_size)),0:12])
+        label_seg.append(int(data[i][12]))
     return data_seg, label_seg
 
 
@@ -45,22 +37,49 @@ def load_segments(file_name, activity, window_size, overlap):
 
 #feature extraction
 def mean(segment):
-    #mean of each axis, X, Y and Z
-	return np.mean(segment[:,0]),np.mean(segment[:,1]),np.mean(segment[:,2])
+    #mean of each axis
+    mean=[]
+    for i in range(12):
+        mean.append(np.mean(segment[:,i]))
+    return mean
 
 def std_dev(segment):
-    #std of each axis, X, Y and Z
-	return np.std(segment[:,0]),np.std(segment[:,1]),np.std(segment[:,2])
+    #std of each axis
+    std_dev=[]
+    for i in range(12):
+        std_dev.append(np.std(segment[:,i]))
+    return std_dev
 
 def corr_coeff(segment):
-    #correlation btw X and Y, btw X and Z, btw Y and Z
-    return np.corrcoef(segment[:,0],segment[:,1])[0][1],np.corrcoef(segment[:,0],segment[:,2])[0][1],np.corrcoef(segment[:,1],segment[:,2])[0][1]
+    #correlation btw accel and gyro
+    coeff = []
+    for i in range(0,3):
+        coeff.append(np.corrcoef(segment[:,i], segment[:,i+3])[0][1])
+    for i in range(6,9):
+        coeff.append(np.corrcoef(segment[:,i], segment[:,i+3])[0][1])
+    return coeff
+
+def energy(segment):
+    energy = []
+    for i in range(0,12):
+        freq_components = np.abs(np.fft.rfft(segment[:,i]))
+        energy.append(np.sum(freq_components ** 2) / len(freq_components))
+    return energy
+
+def entropy(segment):
+    entropy = []
+    for i in range(0,12):
+        freq_components = np.abs(np.fft.rfft(segment[:,i]))
+        entropy.append(stats.entropy(freq_components, base=2))
+    return entropy
 
 def feature_extraction(segment):
     feature=[]
     feature.extend(mean(segment))   
     feature.extend(std_dev(segment))
     feature.extend(corr_coeff(segment))
+    feature.extend(energy(segment))
+    feature.extend(entropy(segment))        
     return feature
 
 
@@ -69,9 +88,10 @@ def feature_extraction(segment):
 
 data=[]
 label=[]
-for i in range(int(len(folder))):
-    for j in range(int(len(file[i]))):
-        x,y= load_segments(root_path+''.join(folder[i])+''.join(file[i][j]),int(i+1), 200,100)
+
+for i in range(len(file)):
+    for j in range(1,7):        
+        x,y= load_segments(folder+''.join(file[i])+str(j)+".csv",40 ,20)
         data.extend(x)
         label.extend(y)
 
@@ -79,35 +99,34 @@ for i in range(int(len(folder))):
 # In[6]:
 
 
-len(data)
+
 
 
 # In[7]:
 
 
-len(label)
 
 
-# In[8]:
+
+# In[11]:
 
 
 feature_list=[]
 for i in range(int(len(data))):
     feature_list.append(feature_extraction(np.asarray(data[i])))
-len(feature_list)
 
 
-# In[11]:
+# In[9]:
 
 
 df_data= pd.DataFrame(feature_list)
 df_label=pd.DataFrame(label)
 
 
-# In[12]:
+# In[10]:
 
 
 #save as csv
 df_data.to_csv("dataset.csv", sep=',', header=None, index=None)
-df_label.to_csv("labe.csv", header=None, index=None)
+df_label.to_csv("label.csv", header=None, index=None)
 
