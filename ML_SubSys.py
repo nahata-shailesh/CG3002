@@ -21,8 +21,8 @@ from sklearn.metrics import classification_report
 # In[2]:
 
 
-data_path = '/home/pi/Desktop/CG3002/training_data/feature_extracted_data/dataset.csv'
-label_path ='/home/pi/Desktop/CG3002/training_data/feature_extracted_data/label.csv'
+data_path = '/Users/Shailesh/Documents/workspace/CG3002/training_data/feature_extracted_data/dataset2.csv'
+label_path ='/Users/Shailesh/Documents/workspace/CG3002/training_data/feature_extracted_data/label2.csv'
 
 
 # In[3]:
@@ -60,7 +60,15 @@ kf = StratifiedKFold(n_splits=5, random_state = 4)
 
 
 # In[8]:
+rfc.fit(x_train, y_train)
+importances = rfc.feature_importances_
+indices = np.argsort(importances)[::-1]
 
+# Print the feature ranking
+print("Feature ranking:")
+
+for f in range(x_train.shape[1]):
+    print("%d. feature %d (%f)" % (f + 1, indices[f], importances[indices[f]]))
 
 y_pred=[]
 for model in models:
@@ -73,34 +81,34 @@ for model in models:
 # In[9]:
 
 
-#K-fold validation , KNN -> GNB -> RFC
-for model in models:
-    scores = cross_val_score(model, x_train, y_train, cv=kf, scoring='accuracy')
-    print(scores.mean())
+# #K-fold validation , KNN -> GNB -> RFC
+# for model in models:
+#     scores = cross_val_score(model, x_train, y_train, cv=kf, scoring='accuracy')
+#     print(scores.mean())
 
 
-# In[10]:
+# # In[10]:
 
 
-#confusion matrix  KNN -> GNB -> RFC
-#precsion : is intuitively the ability of the classifier 
-#not to label as positive a sample that is negative.
-#recall : to find all the positive samples.
-#fscore : balance betweeen precsion and score
-confusion_mat=[]
-for i in range(int(len(y_pred))):
-    print(confusion_matrix(y_test, y_pred[i]))
-    print(precision_recall_fscore_support(y_test, y_pred[i], average='micro'))
+# #confusion matrix  KNN -> GNB -> RFC
+# #precsion : is intuitively the ability of the classifier 
+# #not to label as positive a sample that is negative.
+# #recall : to find all the positive samples.
+# #fscore : balance betweeen precsion and score
+# confusion_mat=[]
+# for i in range(int(len(y_pred))):
+#     print(confusion_matrix(y_test, y_pred[i]))
+#     print(precision_recall_fscore_support(y_test, y_pred[i], average='micro'))
     
     
 
 
-# In[13]:
+# # In[13]:
 
 
-target_names = ['rest', 'wiper', 'number7', 'chicken', 'sidestep', 'turnclap']
-for i in range(int(len(y_pred))):
-    print(classification_report(y_test, y_pred[i], target_names=target_names))
+# target_names = ['rest', 'wiper', 'number7', 'chicken', 'sidestep', 'turnclap']
+# for i in range(int(len(y_pred))):
+#     print(classification_report(y_test, y_pred[i], target_names=target_names))
 
 from sklearn.externals import joblib
 joblib.dump(rfc, 'rfc_trained.joblib') 
