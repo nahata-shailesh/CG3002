@@ -118,7 +118,7 @@ def handshake():
             return True
         
 def form_segment(data, segment):
-    window_size = 40    
+    window_size = 24    
     segment.extend(data)
     if(len(segment)== window_size):
         return True, segment
@@ -145,7 +145,7 @@ sendData = bytes('D', encoding = 'utf-8')
 processDataFlag = 0    
     
 #dance move prediction
-dance_move = ['rest','wiper','number7','chicken','sidestep','turnclap']
+dance_move = ['rest','wipers','number7','chicken','sidestep','turnclap']
 prev_pred = 13 #invalid label as 1st prev_pred
 pred_true = 0  
 segment = []
@@ -217,7 +217,10 @@ if (handshake()):
                 pred_true += 1
             else:
                 pred_true = 0
-            if(pred_true == 2):
+            
+            segment = segment[12:]
+            
+            if(pred_true == 1):
                 pred_dance = dance_move[curr_pred]
                 #print('***************')
                 print(pred_dance)
@@ -232,8 +235,8 @@ if (handshake()):
                     pi.energy = powerReadings[3]
                     pi.sendData(action)
                     time.sleep(1)
+                    segment = []
                 pred_true=0;
             prev_pred = curr_pred 
-            segment = segment[20:]
 
 
