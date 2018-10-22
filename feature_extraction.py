@@ -1,23 +1,71 @@
+
+# coding: utf-8
+
+# In[1]:
 import numpy as np
+import pandas as pd
 from scipy import stats
 
+#feature extraction
 def mean(segment):
-	return np.mean(segment, axis=0)
+    #mean of each axis
+    mean=[]
+    for i in range(12):
+        mean.append(np.mean(segment[:,i]))
+    return mean
+
+def minimum(segment):
+    #minimum of each axis
+    minimum=[]
+    for i in range(12):
+        minimum.append(np.min(segment[:,i]))
+    return minimum
+   
+def maximum(segment):
+    #maximum of each axis
+    maximum=[]
+    for i in range(12):
+        maximum.append(np.max(segment[:,i]))
+    return maximum
 
 def std_dev(segment):
-	return np.std(segment, axis= 0)
+    #std of each axis
+    std_dev=[]
+    for i in range(12):
+        std_dev.append(np.std(segment[:,i]))
+    return std_dev
+
+def corr_coeff(segment):
+    #correlation btw accel and gyro
+    coeff = []
+    for i in range(0,3):
+        coeff.append(np.corrcoef(segment[:,i], segment[:,i+3])[0][1])
+    for i in range(6,9):
+        coeff.append(np.corrcoef(segment[:,i], segment[:,i+3])[0][1])
+    return coeff
 
 def energy(segment):
-    freq_components = np.abs(np.fft.rfft(segment))
-    return np.array([np.sum(freq_components ** 2) / len(freq_components)])
+    energy = []
+    for i in range(0,12):
+        freq_components = np.abs(np.fft.rfft(segment[:,i]))
+        energy.append(np.sum(freq_components ** 2) / len(freq_components))
+    return energy
 
 def entropy(segment):
-    freq_components = np.abs(np.fft.rfft(segment))
-    return np.array(stats.entropy(freq_components, base=2))
+    entropy = []
+    for i in range(0,12):
+        freq_components = np.abs(np.fft.rfft(segment[:,i]))
+        entropy.append(stats.entropy(freq_components, base=2))
+    return entropy
 
-# Extract features for all the segments
-def extract_features(segments, feature_funcs):
-    def extract_features(segment):
-        feature_lists = [feature_func(segment) for feature_func in feature_funcs]
-        return np.concatenate(feature_lists)
-    return np.array([extract_features(segment) for segment in segments])
+def feature_extraction(segment):
+    feature=[]
+    feature.extend(mean(segment)) 
+    feature.extend(minimum(segment))
+    feature.extend(maximum(segment))
+    feature.extend(std_dev(segment))
+    #feature.extend(corr_coeff(segment))
+    feature.extend(energy(segment))
+    feature.extend(entropy(segment))        
+    return feature
+
