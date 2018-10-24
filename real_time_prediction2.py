@@ -149,7 +149,7 @@ dance_move = ['rest','wipers','number7','chicken','sidestep','turnclap']
 prev_pred = 13 #invalid label as 1st prev_pred
 pred_true = 0  
 segment = []
-model = joblib.load('rfc_trained.joblib')  #Load model
+model = joblib.load('rfc_trained_2.joblib')  #Load model
 
 if (handshake()):
 
@@ -234,7 +234,7 @@ if (handshake()):
                     pi.power = powerReadings[2]
                     pi.energy = powerReadings[3]
                     pi.sendData(action)
-                    time.sleep(1)
+                    time.sleep(1.25)
                     segment = []
                 pred_true=0;
             prev_pred = curr_pred 

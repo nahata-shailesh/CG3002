@@ -21,8 +21,8 @@ from sklearn.metrics import classification_report
 # In[2]:
 
 
-data_path = '/home/pi/Desktop/CG3002/training_data/feature_extracted_data/dataset5.csv'
-label_path ='/home/pi/Desktop/CG3002/training_data/feature_extracted_data/label5.csv'
+data_path = '/home/pi/Desktop/CG3002/training_data/feature_extracted_data/dataset6.csv'
+label_path ='/home/pi/Desktop/CG3002/training_data/feature_extracted_data/label6.csv'
 
 
 # In[3]:
@@ -111,5 +111,5 @@ for model in models:
 #     print(classification_report(y_test, y_pred[i], target_names=target_names))
 
 from sklearn.externals import joblib
-joblib.dump(rfc, 'rfc_trained.joblib') 
+joblib.dump(rfc, 'rfc_trained_2.joblib') 
 
