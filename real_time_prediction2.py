@@ -223,7 +223,7 @@ if (handshake()):
             if(pred_true == 1):
                 pred_dance = dance_move[curr_pred]
                 #print('***************')
-                print(pred_dance)
+                #print(pred_dance)
                 #print('***************')
                 #send predicted result to server
                 if(pred_dance != 'rest'):
