@@ -234,7 +234,7 @@ if (handshake()):
                     pi.power = powerReadings[2]
                     pi.energy = powerReadings[3]
                     pi.sendData(action)
-                    time.sleep(1.25)
+                    time.sleep(1.3)
                     segment = []
                 pred_true=0;
             prev_pred = curr_pred 
