@@ -149,7 +149,7 @@ dance_move = ['rest','wipers','number7','chicken','sidestep','turnclap','numbers
 prev_pred = 13 #invalid label as 1st prev_pred
 pred_true = 0  
 segment = []
-model = joblib.load('rfc_trained_3.joblib')  #Load model
+model = joblib.load('rfc_trained_4.joblib')  #Load model
 
 if (handshake()):
 
@@ -222,9 +222,9 @@ if (handshake()):
             
             if(pred_true == 2):
                 pred_dance = dance_move[curr_pred]
-                print('***************')
+                #print('***************')
                 print(pred_dance)
-                print('***************')
+                #print('***************')
                 #send predicted result to server
                 if(pred_dance != 'rest'):
                     action = pred_dance
