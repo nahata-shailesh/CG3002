@@ -133,7 +133,7 @@ dance_move = ['rest','wiper','number7','chicken','sidestep','turnclap']
 prev_pred = 13 #invalid label as 1st prev_pred
 pred_true = 0  
 segment = []
-model = joblib.load('rfc_trained.joblib')  #Load model
+model = joblib.load('rfc_trained_3.joblib')  #Load model
 
 if (handshake()):
 
