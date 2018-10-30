@@ -9,6 +9,7 @@ import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.multiclass import OneVsRestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import StratifiedKFold
@@ -21,8 +22,8 @@ from sklearn.metrics import classification_report
 # In[2]:
 
 
-data_path = '/home/pi/Desktop/CG3002/training_data/feature_extracted_data/dataset6.csv'
-label_path ='/home/pi/Desktop/CG3002/training_data/feature_extracted_data/label6.csv'
+data_path = '/Users/Shailesh/Documents/workspace/CG3002/training_data/feature_extracted_data/dataset7.csv'
+label_path ='/Users/Shailesh/Documents/workspace/CG3002/training_data/feature_extracted_data/label7.csv'
 
 
 # In[3]:
@@ -52,23 +53,24 @@ x_train, x_test, y_train, y_test = train_test_split(data,label, test_size=0.2, r
 knn = KNeighborsClassifier(n_neighbors=3) 
 gnb = GaussianNB()
 rfc=RandomForestClassifier(random_state=4)
+ovr = OneVsRestClassifier(estimator=RandomForestClassifier(random_state=4))
 models=[]
-models.append(knn)
-models.append(gnb)
+# models.append(knn)
+# models.append(gnb)
 models.append(rfc)
 kf = StratifiedKFold(n_splits=5, random_state = 4)
 
 
 # In[8]:
-rfc.fit(x_train, y_train)
-importances = rfc.feature_importances_
-indices = np.argsort(importances)[::-1]
+# rfc.fit(x_train, y_train)
+# importances = rfc.feature_importances_
+# indices = np.argsort(importances)[::-1]
 
-# Print the feature ranking
-print("Feature ranking:")
+# # Print the feature ranking
+# print("Feature ranking:")
 
-for f in range(x_train.shape[1]):
-    print("%d. feature %d (%f)" % (f + 1, indices[f], importances[indices[f]]))
+# for f in range(x_train.shape[1]):
+#     print("%d. feature %d (%f)" % (f + 1, indices[f], importances[indices[f]]))
 
 y_pred=[]
 for model in models:
@@ -81,24 +83,24 @@ for model in models:
 # In[9]:
 
 
-# #K-fold validation , KNN -> GNB -> RFC
-# for model in models:
-#     scores = cross_val_score(model, x_train, y_train, cv=kf, scoring='accuracy')
-#     print(scores.mean())
+#K-fold validation , KNN -> GNB -> RFC
+for model in models:
+    scores = cross_val_score(model, x_train, y_train, cv=kf, scoring='accuracy')
+    print(scores.mean())
 
 
-# # In[10]:
+# In[10]:
 
 
-# #confusion matrix  KNN -> GNB -> RFC
-# #precsion : is intuitively the ability of the classifier 
-# #not to label as positive a sample that is negative.
-# #recall : to find all the positive samples.
-# #fscore : balance betweeen precsion and score
-# confusion_mat=[]
-# for i in range(int(len(y_pred))):
-#     print(confusion_matrix(y_test, y_pred[i]))
-#     print(precision_recall_fscore_support(y_test, y_pred[i], average='micro'))
+#confusion matrix  KNN -> GNB -> RFC
+#precsion : is intuitively the ability of the classifier 
+#not to label as positive a sample that is negative.
+#recall : to find all the positive samples.
+#fscore : balance betweeen precsion and score
+confusion_mat=[]
+for i in range(int(len(y_pred))):
+    print(confusion_matrix(y_test, y_pred[i]))
+    print(precision_recall_fscore_support(y_test, y_pred[i], average='micro'))
     
     
 
@@ -110,6 +112,6 @@ for model in models:
 # for i in range(int(len(y_pred))):
 #     print(classification_report(y_test, y_pred[i], target_names=target_names))
 
-from sklearn.externals import joblib
-joblib.dump(rfc, 'rfc_trained_2.joblib') 
+# from sklearn.externals import joblib
+# joblib.dump(rfc, 'rfc_trained_3.joblib') 
 
