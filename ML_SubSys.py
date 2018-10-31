@@ -24,8 +24,6 @@ from sklearn.metrics import classification_report
 data_path = '/home/pi/Desktop/CG3002/training_data/feature_extracted_data/dataset9.csv'
 label_path ='/home/pi/Desktop/CG3002/training_data/feature_extracted_data/label9.csv'
 
-
-
 # In[3]:
 
 
