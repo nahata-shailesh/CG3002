@@ -112,7 +112,7 @@ for i in range(int(len(y_pred))):
 # for i in range(int(len(y_pred))):
 #     print(classification_report(y_test, y_pred[i], target_names=target_names))
 
-# from sklearn.externals import joblib
-# joblib.dump(rfc, 'rfc_trained_3.joblib') 
+from sklearn.externals import joblib
+joblib.dump(rfc, 'rfc_trained_4.joblib') 
 
 
