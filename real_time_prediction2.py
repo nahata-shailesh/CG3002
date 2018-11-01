@@ -158,8 +158,8 @@ if (handshake()):
         port.write(sendData)
         port.reset_output_buffer()
         message = readlineCR(port)
-        #if(message):
-            #print("Message:", message)
+        if(message):
+            print("Message:", message)
             #port.write(sendData)
 
         if (message):

@@ -133,7 +133,7 @@ dance_move = ['rest','wipers','number7','chicken','sidestep','turnclap','numbers
 prev_pred = 13 #invalid label as 1st prev_pred
 pred_true = 0  
 segment = []
-model = joblib.load('rfc_trained_4.joblib')  #Load model
+model = joblib.load('rfc_trained_5.joblib')  #Load model
 
 if (handshake()):
 
@@ -142,11 +142,11 @@ if (handshake()):
         port.write(sendData)
         port.reset_output_buffer()
         message = readlineCR(port)
-        if(message):
-            print("Message:", message)
+        #if(message):
+            #print("Message:", message)
             #port.write(sendData)
 
-        if True:
+        if message:
             #port.write(sendData)
             #port.reset_output_buffer()
             readEndTime = current_milli_time()
@@ -196,7 +196,9 @@ if (handshake()):
         segment_formed, segment = form_segment(data,segment)
         
         if(segment_formed):
-            curr_pred = int(model.predict(extract_feature(segment)))          
+            feature_extracted_segment = extract_feature(segment)
+            curr_pred = int(model.predict(feature_extracted_segment))
+            print(model.predict_proba(feature_extracted_segment)) 
             if(curr_pred == prev_pred):
                 pred_true += 1
             else:
@@ -206,7 +208,7 @@ if (handshake()):
             
             if(pred_true == 2):
                 pred_dance = dance_move[curr_pred]
-                print('*******************************************')
+                #print('*******************************************')
                 print(pred_dance)
 ##                #send predicted result to server
 ##                action = pred_dance
@@ -216,8 +218,8 @@ if (handshake()):
 ##                pi.power = powerReadings[2]
 ##                pi.energy = powerReadings[3]
 ##                pi.sendData(action)
-                print('*******************************************')
-                time.sleep(1.3)
+                #print('*******************************************')
+                time.sleep(1)
                 segment = []
                 pred_true=0;
             prev_pred = curr_pred 
