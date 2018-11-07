@@ -21,13 +21,8 @@ from sklearn.metrics import classification_report
 
 # In[2]:
 
-<<<<<<< HEAD
-data_path = '/home/pi/Desktop/CG3002/training_data/feature_extracted_data/datasetTT.csv'
-label_path ='/home/pi/Desktop/CG3002/training_data/feature_extracted_data/labelTT.csv'
-=======
 data_path = '/home/pi/Desktop/CG3002/training_data/feature_extracted_data/datasetN.csv'
 label_path ='/home/pi/Desktop/CG3002/training_data/feature_extracted_data/labelN.csv'
->>>>>>> 341680acec7e8f86024b457c6680535e62fa8772
 
 # In[3]:
 
@@ -116,10 +111,7 @@ for i in range(int(len(y_pred))):
 #     print(classification_report(y_test, y_pred[i], target_names=target_names))
 
 from sklearn.externals import joblib
-<<<<<<< HEAD
-joblib.dump(rfc, 'rfc_trained_TT.joblib') 
-=======
+
 joblib.dump(rfc, 'rfc_trained_N.joblib') 
->>>>>>> 341680acec7e8f86024b457c6680535e62fa8772
 
 
