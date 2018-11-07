@@ -102,7 +102,7 @@ def handshake():
             return True
         
 def form_segment(data, segment):
-    window_size = 24    
+    window_size = 32    
     segment.extend(data)
     if(len(segment)== window_size):
         return True, segment
@@ -204,7 +204,7 @@ if (handshake()):
             else:
                 pred_true = 0
            
-            segment = segment[12:]
+            segment = segment[16:]
             
             if(pred_true == 2):
                 pred_dance = dance_move[curr_pred]
