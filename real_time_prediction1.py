@@ -129,11 +129,11 @@ sendData = bytes('D', encoding = 'utf-8')
 processDataFlag = 0    
     
 #dance move prediction
-dance_move = ['rest','wipers','number7','chicken','sidestep','turnclap','numbersix','salute','mermaid','swing','cowboy']
+dance_move =['rest','wipers','number7','chicken','sidestep','turnclap','numbersix','salute','mermaid','swing','cowboy','logout']
 prev_pred = 13 #invalid label as 1st prev_pred
 pred_true = 0  
 segment = []
-model = joblib.load('rfc_trained_5.joblib')  #Load model
+model = joblib.load('rfc_trained_N.joblib')  #Load model
 
 if (handshake()):
 
@@ -198,7 +198,7 @@ if (handshake()):
         if(segment_formed):
             feature_extracted_segment = extract_feature(segment)
             curr_pred = int(model.predict(feature_extracted_segment))
-            print(model.predict_proba(feature_extracted_segment)) 
+            #print(model.predict_proba(feature_extracted_segment)) 
             if(curr_pred == prev_pred):
                 pred_true += 1
             else:
@@ -206,7 +206,7 @@ if (handshake()):
            
             segment = segment[16:]
             
-            if(pred_true == 2):
+            if(pred_true == 1):
                 pred_dance = dance_move[curr_pred]
                 #print('*******************************************')
                 print(pred_dance)
