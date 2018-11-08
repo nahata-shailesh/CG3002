@@ -118,7 +118,7 @@ def handshake():
             return True
         
 def form_segment(data, segment):
-    window_size = 24    
+    window_size = 32    
     segment.extend(data)
     if(len(segment)== window_size):
         return True, segment
@@ -145,11 +145,11 @@ sendData = bytes('D', encoding = 'utf-8')
 processDataFlag = 0    
     
 #dance move prediction
-dance_move = ['rest','wipers','number7','chicken','sidestep','turnclap','numbersix','salute','mermaid','swing','cowboy']
+dance_move =['rest','wipers','number7','chicken','sidestep','turnclap','numbersix','salute','mermaid','swing','cowboy','logout']
 prev_pred = 13 #invalid label as 1st prev_pred
 pred_true = 0  
 segment = []
-model = joblib.load('rfc_trained_4.joblib')  #Load model
+model = joblib.load('rfc_trained_N.joblib')  #Load model
 
 if (handshake()):
 
@@ -218,7 +218,7 @@ if (handshake()):
             else:
                 pred_true = 0
             
-            segment = segment[12:]
+            segment = segment[16:]
             
             if(pred_true == 2):
                 pred_dance = dance_move[curr_pred]
@@ -234,7 +234,7 @@ if (handshake()):
                     pi.power = powerReadings[2]
                     pi.energy = powerReadings[3]
                     pi.sendData(action)
-                    time.sleep(1.3)
+                    time.sleep(1.1)
                     segment = []
                 pred_true=0;
             prev_pred = curr_pred 
