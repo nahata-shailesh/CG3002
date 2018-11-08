@@ -21,8 +21,8 @@ from sklearn.metrics import classification_report
 
 # In[2]:
 
-data_path = '/home/pi/Desktop/CG3002/training_data/feature_extracted_data/datasetSet5.csv'
-label_path ='/home/pi/Desktop/CG3002/training_data/feature_extracted_data/labelSet5.csv'
+data_path = '/home/pi/Desktop/CG3002/training_data/feature_extracted_data/datasetSet6.csv'
+label_path ='/home/pi/Desktop/CG3002/training_data/feature_extracted_data/labelSet6.csv'
 
 # In[3]:
 
@@ -50,7 +50,7 @@ x_train, x_test, y_train, y_test = train_test_split(data,label, test_size=0.2, r
 
 knn = KNeighborsClassifier(n_neighbors=3) 
 gnb = GaussianNB()
-rfc=RandomForestClassifier(n_estimators=128,random_state=4)
+rfc=RandomForestClassifier(random_state=4)
 ovr = OneVsRestClassifier(estimator=RandomForestClassifier(random_state=4))
 models=[]
 # models.append(knn)
@@ -112,6 +112,6 @@ for i in range(int(len(y_pred))):
 
 from sklearn.externals import joblib
 
-joblib.dump(rfc, 'rfc_trained_Set5.joblib') 
+joblib.dump(rfc, 'rfc_trained_Set6.joblib') 
 
 
