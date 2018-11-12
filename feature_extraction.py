@@ -38,10 +38,16 @@ def std_dev(segment):
 def corr_coeff(segment):
     #correlation btw accel and gyro
     coeff = []
-    for i in range(0,3):
-        coeff.append(np.corrcoef(segment[:,i], segment[:,i+3])[0][1])
-    for i in range(6,9):
-        coeff.append(np.corrcoef(segment[:,i], segment[:,i+3])[0][1])
+#     coeff.append(np.corrcoef(segment[:,6], segment[:,7])[0][1])
+#     coeff.append(np.corrcoef(segment[:,6], segment[:,8])[0][1])
+#     coeff.append(np.corrcoef(segment[:,7], segment[:,8])[0][1])
+#     coeff.append(np.corrcoef(segment[:,9], segment[:,10])[0][1])
+#     coeff.append(np.corrcoef(segment[:,9], segment[:,11])[0][1])
+#     coeff.append(np.corrcoef(segment[:,10], segment[:,11])[0][1])
+    
+    coeff.append(np.corrcoef(segment[:,0], segment[:,6])[0][1])
+    coeff.append(np.corrcoef(segment[:,2], segment[:,8])[0][1])
+    coeff.append(np.corrcoef(segment[:,4], segment[:,10])[0][1])
     return coeff
 
 def energy(segment):
@@ -60,11 +66,11 @@ def entropy(segment):
 
 def feature_extraction(segment):
     feature=[]
+    feature.extend(corr_coeff(segment))
     feature.extend(mean(segment)) 
     feature.extend(minimum(segment))
     feature.extend(maximum(segment))
     feature.extend(std_dev(segment))
-    #feature.extend(corr_coeff(segment))
     feature.extend(energy(segment))
     feature.extend(entropy(segment))        
     return feature
