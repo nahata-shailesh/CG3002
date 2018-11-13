@@ -17,6 +17,7 @@ import numpy as np
 import pandas as pd
 from feature_extraction import feature_extraction
 from sklearn.externals import joblib
+from sklearn.preprocessing import StandardScaler
 from collections import Counter
 
 
@@ -111,8 +112,12 @@ def form_segment(data, segment):
         return False, segment
         
 def extract_feature(segment):
+    scaler = StandardScaler()
+    scaler.fit(segment)
+    segment = scaler.transform(segment)
     x = np.asarray(feature_extraction(np.asarray(segment)))
     x = np.array([x])    
+
     return x
         
     
