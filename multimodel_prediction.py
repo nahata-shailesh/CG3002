@@ -18,7 +18,7 @@ import pandas as pd
 from feature_extraction import feature_extraction
 from sklearn.externals import joblib
 from collections import Counter
-
+from sklearn.preprocessing import StandardScaler
 
 port = serial.Serial("/dev/ttyS0", baudrate = 115200, timeout=1.0)
 port.reset_input_buffer()
@@ -111,6 +111,9 @@ def form_segment(data, segment):
         return False, segment
         
 def extract_feature(segment):
+    scaler = StandardScaler()
+    scaler.fit(segment)
+    segment = scaler.transform(segment)
     x = np.asarray(feature_extraction(np.asarray(segment)))
     x = np.array([x])    
     return x
@@ -202,7 +205,11 @@ if (handshake()):
             feature_extracted_segment = extract_feature(segment)
             rfc_pred = int(rfc.predict(feature_extracted_segment))
             mlp_pred = int(mlp.predict(feature_extracted_segment))
+            #print("MLP: ", mlp_pred)
             ovr_pred = int(ovr.predict(feature_extracted_segment))
+            print(rfc.predict_proba(feature_extracted_segment))
+            print(mlp.predict_proba(feature_extracted_segment))
+            print(ovr.predict_proba(feature_extracted_segment))
             pred_list = []
             pred_list.append(rfc_pred)
             pred_list.append(mlp_pred)

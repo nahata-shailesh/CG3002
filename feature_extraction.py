@@ -66,7 +66,7 @@ def entropy(segment):
 
 def feature_extraction(segment):
     feature=[]
-    feature.extend(corr_coeff(segment))
+    #feature.extend(corr_coeff(segment))
     feature.extend(mean(segment)) 
     feature.extend(minimum(segment))
     feature.extend(maximum(segment))

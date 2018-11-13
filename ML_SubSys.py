@@ -23,9 +23,8 @@ from sklearn.multiclass import OneVsRestClassifier
 
 # In[2]:
 
-
-data_path = '/Users/Shailesh/Documents/workspace/CG3002/training_data/feature_extracted_data/datasetSetFinal.csv'
-label_path ='/Users/Shailesh/Documents/workspace/CG3002/training_data/feature_extracted_data/labelSetFinal.csv'
+data_path = '/home/pi/Desktop/CG3002/training_data/feature_extracted_data/datasetSetFinal.csv'
+label_path = '/home/pi/Desktop/CG3002/training_data/feature_extracted_data/labelSetFinal.csv'
 
 
 # In[3]:
@@ -33,7 +32,6 @@ label_path ='/Users/Shailesh/Documents/workspace/CG3002/training_data/feature_ex
 
 data_df = pd.read_csv(data_path,header =None)
 label_df = pd.read_csv(label_path,header=None)
-data_df.isnull().sum().sum()
 scaler = StandardScaler()
 scaler.fit(data_df)
 data_df=scaler.transform(data_df)
@@ -45,7 +43,6 @@ data_df=scaler.transform(data_df)
 data=np.asarray(data_df)
 label=np.asarray(label_df).flatten('F') #change to 1D vector
 
-
 # In[5]:
 
 
@@ -56,10 +53,8 @@ x_train, x_test, y_train, y_test = train_test_split(data,label, test_size=0.2, r
 
 
 mlp =MLPClassifier(random_state=4)
-gnb = GaussianNB()
 
 rfc=RandomForestClassifier(random_state=4)
-rfc2=RandomForestClassifier(random_state=4)
 ovr = OneVsRestClassifier(mlp)
 models =[]
 models.append(ovr)
@@ -73,7 +68,9 @@ kf = StratifiedKFold(n_splits=5, random_state = 4)
 
 y_pred=[]
 for model in models:
+    print("2")
     model.fit(x_train,y_train)
+    print("3")
     y=model.predict(x_test)
     y_pred.append(y)  
     print(accuracy_score(y_test, y))
@@ -83,9 +80,9 @@ for model in models:
 
 
 #K-fold validation , KNN -> GNB -> RFC
-for model in models:
-    scores = cross_val_score(model, x_train, y_train, cv=kf, scoring='accuracy')
-    print(scores.mean())
+#for model in models:
+#    scores = cross_val_score(model, x_train, y_train, cv=kf, scoring='accuracy')
+ #   print(scores.mean())
 
 
 # In[9]:
@@ -96,10 +93,10 @@ for model in models:
 #not to label as positive a sample that is negative.
 #recall : to find all the positive samples.
 #fscore : balance betweeen precsion and score
-confusion_mat=[]
-for i in range(int(len(y_pred))):
-    print(confusion_matrix(y_test, y_pred[i]))
-    print(precision_recall_fscore_support(y_test, y_pred[i], average='micro'))
+#confusion_mat=[]
+#for i in range(int(len(y_pred))):
+ #   print(confusion_matrix(y_test, y_pred[i]))
+ #   print(precision_recall_fscore_support(y_test, y_pred[i], average='micro'))
     
     
 
@@ -107,9 +104,9 @@ for i in range(int(len(y_pred))):
 # In[10]:
 
 
-target_names = ['rest', 'wiper', 'number7', 'chicken', 'sidestep', 'turnclap','number6','salute','mermaid','swing','cowboy','logout']
-for i in range(int(len(y_pred))):
-    print(classification_report(y_test, y_pred[i], target_names=target_names))
+#target_names = ['rest', 'wiper', 'number7', 'chicken', 'sidestep', 'turnclap','number6','salute','mermaid','swing','cowboy','logout']
+#for i in range(int(len(y_pred))):
+ #   print(classification_report(y_test, y_pred[i], target_names=target_names))
 
 
 # In[11]:

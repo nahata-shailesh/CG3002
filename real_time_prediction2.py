@@ -118,7 +118,7 @@ def handshake():
             return True
         
 def form_segment(data, segment):
-    window_size = 28    
+    window_size = 32    
     segment.extend(data)
     if(len(segment)== window_size):
         return True, segment
