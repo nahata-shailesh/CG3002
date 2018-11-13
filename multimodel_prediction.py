@@ -17,6 +17,7 @@ import numpy as np
 import pandas as pd
 from feature_extraction import feature_extraction
 from sklearn.externals import joblib
+from sklearn.preprocessing import StandardScaler
 from collections import Counter
 from sklearn.preprocessing import StandardScaler
 
@@ -116,6 +117,7 @@ def extract_feature(segment):
     segment = scaler.transform(segment)
     x = np.asarray(feature_extraction(np.asarray(segment)))
     x = np.array([x])    
+
     return x
         
     
