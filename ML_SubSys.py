@@ -24,8 +24,8 @@ from sklearn.multiclass import OneVsRestClassifier
 # In[2]:
 
 
-data_path = '/Users/tingtingx/Documents/CEG4/SEM1/CG3002/ML_Code/datasetSetF.csv'
-label_path ='/Users/tingtingx/Documents/CEG4/SEM1/CG3002/ML_Code/labelSetF.csv'
+data_path = '/Users/Shailesh/Documents/workspace/CG3002/training_data/feature_extracted_data/datasetSetFinal.csv'
+label_path ='/Users/Shailesh/Documents/workspace/CG3002/training_data/feature_extracted_data/labelSetFinal.csv'
 
 
 # In[3]:
@@ -115,16 +115,16 @@ for i in range(int(len(y_pred))):
 # In[11]:
 
 
-importances = rfc.feature_importances_
-std = np.std([tree.feature_importances_ for tree in rfc.estimators_],
-             axis=0)
-indices = np.argsort(importances)[::-1]
+# importances = rfc.feature_importances_
+# std = np.std([tree.feature_importances_ for tree in rfc.estimators_],
+#              axis=0)
+# indices = np.argsort(importances)[::-1]
 
-# Print the feature ranking
-print("Feature ranking:")
+# # Print the feature ranking
+# print("Feature ranking:")
 
-for f in range(x_train.shape[1]):
-    print("%d. feature %d (%f)" % (f + 1, indices[f], importances[indices[f]]))
+# for f in range(x_train.shape[1]):
+#     print("%d. feature %d (%f)" % (f + 1, indices[f], importances[indices[f]]))
 
 
 # In[12]:
