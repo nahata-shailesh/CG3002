@@ -133,7 +133,7 @@ dance_move =['rest','wipers','number7','chicken','sidestep','turnclap','numbersi
 prev_pred = 13 #invalid label as 1st prev_pred
 pred_true = 0  
 segment = []
-model = joblib.load('rfc_trained.joblib')  #Load model
+model = joblib.load('rfc_trained_N.joblib')  #Load model
 
 if (handshake()):
 
@@ -142,8 +142,8 @@ if (handshake()):
         port.write(sendData)
         port.reset_output_buffer()
         message = readlineCR(port)
-        #if(message):
-            #print("Message:", message)
+        if(message):
+            print("Message:", message)
             #port.write(sendData)
 
         if message:

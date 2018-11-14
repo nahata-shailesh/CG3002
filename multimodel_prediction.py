@@ -19,7 +19,6 @@ from feature_extraction import feature_extraction
 from sklearn.externals import joblib
 from sklearn.preprocessing import StandardScaler
 from collections import Counter
-from sklearn.preprocessing import StandardScaler
 
 port = serial.Serial("/dev/ttyS0", baudrate = 115200, timeout=1.0)
 port.reset_input_buffer()
@@ -112,12 +111,10 @@ def form_segment(data, segment):
         return False, segment
         
 def extract_feature(segment):
-    scaler = StandardScaler()
-    scaler.fit(segment)
-    segment = scaler.transform(segment)
     x = np.asarray(feature_extraction(np.asarray(segment)))
     x = np.array([x])    
-
+    
+    x = scaler.transform(x)
     return x
         
     
@@ -139,9 +136,10 @@ dance_move =['rest','wipers','number7','chicken','sidestep','turnclap','numbersi
 prev_pred = 13 #invalid label as 1st prev_pred
 pred_true = 0  
 segment = []
-rfc = joblib.load('rfc_trained.joblib')
-mlp = joblib.load('mlp_trained.joblib')
-ovr = joblib.load('ovr_trained.joblib')
+rfc = joblib.load('rfc_trained_2.joblib')
+mlp = joblib.load('mlp_trained_2.joblib')
+ovr = joblib.load('ovr_trained_2.joblib')
+scaler = joblib.load('scaler.joblib')
 
 if (handshake()):
 
@@ -209,9 +207,12 @@ if (handshake()):
             mlp_pred = int(mlp.predict(feature_extracted_segment))
             #print("MLP: ", mlp_pred)
             ovr_pred = int(ovr.predict(feature_extracted_segment))
-            print(rfc.predict_proba(feature_extracted_segment))
-            print(mlp.predict_proba(feature_extracted_segment))
-            print(ovr.predict_proba(feature_extracted_segment))
+            print(rfc_pred)
+            print(mlp_pred)
+            print(ovr_pred)
+            #print(rfc.predict_proba(feature_extracted_segment))
+            #print(mlp.predict_proba(feature_extracted_segment))
+            #print(ovr.predict_proba(feature_extracted_segment))
             pred_list = []
             pred_list.append(rfc_pred)
             pred_list.append(mlp_pred)

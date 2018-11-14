@@ -223,7 +223,7 @@ if (handshake()):
             if(pred_true == 1):
                 pred_dance = dance_move[curr_pred]
                 #print('***************')
-                #print(pred_dance)
+                print(pred_dance)
                 #print('***************')
                 #send predicted result to server
                 if(pred_dance != 'rest'):
@@ -234,7 +234,7 @@ if (handshake()):
                     pi.power = powerReadings[2]
                     pi.energy = powerReadings[3]
                     pi.sendData(action)
-                    time.sleep(1.2)
+                    time.sleep(1)
                     segment = []
                 pred_true=0;
                 prev_pred = 13 

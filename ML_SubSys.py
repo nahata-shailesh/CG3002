@@ -20,15 +20,15 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.svm import LinearSVC
-
+from sklearn.externals import joblib
 
 # In[2]:
 
-data_path = '/Users/Shailesh/Documents/workspace/CG3002/training_data/feature_extracted_data/datasetSetFinal.csv'
-label_path = '/Users/Shailesh/Documents/workspace/CG3002/training_data/feature_extracted_data/labelSetFinal.csv'
+#data_path = '/Users/Shailesh/Documents/workspace/CG3002/training_data/feature_extracted_data/datasetSetFinal.csv'
+#label_path = '/Users/Shailesh/Documents/workspace/CG3002/training_data/feature_extracted_data/labelSetFinal.csv'
 
-# data_path = '/home/pi/Desktop/CG3002/training_data/feature_extracted_data/datasetSetFinal.csv'
-# label_path = '/home/pi/Desktop/CG3002/training_data/feature_extracted_data/labelSetFinal.csv'
+data_path = '/home/pi/Desktop/CG3002/training_data/feature_extracted_data/datasetSetFinal.csv'
+label_path = '/home/pi/Desktop/CG3002/training_data/feature_extracted_data/labelSetFinal.csv'
 
 
 # In[3]:
@@ -43,7 +43,7 @@ label_df = pd.read_csv(label_path,header=None)
 data=np.asarray(data_df)
 label=np.asarray(label_df).flatten('F') #change to 1D vector
 
-scaler = StandardScaler()
+scaler = joblib.load('scaler.joblib')
 scaler.fit(data)
 data=scaler.transform(data)
 
@@ -61,8 +61,8 @@ rfc=RandomForestClassifier(random_state=4)
 svc = LinearSVC()
 ovr = OneVsRestClassifier(svc)
 models =[]
-models.append(ovr)
-models.append(mlp)
+#models.append(ovr)
+#models.append(mlp)
 models.append(rfc)
 kf = StratifiedKFold(n_splits=5, random_state = 4)
 
@@ -225,8 +225,8 @@ for i in range(int(len(y_pred))):
 
 
 from sklearn.externals import joblib
-# joblib.dump(rfc, 'rfc_trained.joblib') 
-joblib.dump(mlp, 'mlp_trained_2.joblib')
-joblib.dump(ovr, 'ovr_trained_2.joblib')
-joblib.dump(scaler, 'scaler.joblib')
+joblib.dump(rfc, 'rfc_trained_2.joblib') 
+#joblib.dump(mlp, 'mlp_trained_2.joblib')
+#joblib.dump(ovr, 'ovr_trained_2.joblib')
+#joblib.dump(scaler, 'scaler.joblib')
 
