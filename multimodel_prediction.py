@@ -206,9 +206,9 @@ if (handshake()):
             mlp_pred = int(mlp.predict(feature_extracted_segment))
             #print("MLP: ", mlp_pred)
             ovr_pred = int(ovr.predict(feature_extracted_segment))
-            print(rfc_pred)
-            print(mlp_pred)
-            print(ovr_pred)
+            # print(rfc_pred)
+            # print(mlp_pred)
+            # print(ovr_pred)
             #print(rfc.predict_proba(feature_extracted_segment))
             #print(mlp.predict_proba(feature_extracted_segment))
             #print(ovr.predict_proba(feature_extracted_segment))
@@ -223,6 +223,15 @@ if (handshake()):
             if num_most_common > 1:
                 pred_dance = dance_move[most_common]
                 print(pred_dance)
-                time.sleep(1.1)
-                segment = []
+
+                if(pred_dance != 'rest'):
+                    action = pred_dance
+                    powerReadings = msg_rec[4].split(',')
+                    pi.voltage = powerReadings[0]
+                    pi.current = powerReadings[1]
+                    pi.power = powerReadings[2]
+                    pi.energy = powerReadings[3]
+                    pi.sendData(action)
+                    time.sleep(1.1)
+                    segment = []
 
