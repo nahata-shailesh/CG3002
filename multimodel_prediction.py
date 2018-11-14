@@ -29,49 +29,48 @@ port.reset_output_buffer()
 # In[2]:
 
 
-##class client():
-##    def __init__(self, ip_addr, port_num):
-##        self.key = '3002300230023002'
-##        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-##        self.block_size = 16
-##        self.voltage = 0
-##        self.current = 0 
-##        self.power = 0 
-##        self.energy = 0
-##        server_address = (ip_addr, port_num)
-##        print('Connecting to %s port %s' % server_address)
-##        self.sock.connect(server_address)
-##
-##    def encrypt(self, message):
-##        #print("in encrypt :   ", message) #for debugging
-##        padding = ' '
-##        pad = lambda s: s + (self.block_size - (len(s) % self.block_size)) * padding
-##        IV = Random.new().read(AES.block_size)
-##        cipher = AES.new(self.key, AES.MODE_CBC, IV)
-##        paddedMessage = pad(message)
-##        encoded = base64.b64encode(IV + cipher.encrypt(paddedMessage))
-##        #print(encoded) #for debug
-##        #print (type(encoded)) #for debug
-##        return encoded
-##
-##    def sendData(self, message):
-##        formattedAnswer = ("#"+ str(message) + "|" + str(self.voltage)\
-##            + "|" + str(self.current) + "|" + str(self.power) + "|" + str(self.energy) + "|")
-##        #print(formattedAnswer) #for debug
-##        encryptedText = self.encrypt(formattedAnswer)
-##        self.sock.send(encryptedText)
-##
-##if __name__ == '__main__':
-##    if len(sys.argv) != 3:
-##        print('Invalid number of arguments')
-##        print('python server.py [IP address] [Port]')
-##        sys.exit()
-##
-##    ip_addr = sys.argv[1]
-##    port_num = int(sys.argv[2])
-##    
-##    pi = client(ip_addr, port_num)
+class client():
+    def __init__(self, ip_addr, port_num):
+        self.key = '3002300230023002'
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.block_size = 16
+        self.voltage = 0
+        self.current = 0 
+        self.power = 0 
+        self.energy = 0
+        server_address = (ip_addr, port_num)
+        print('Connecting to %s port %s' % server_address)
+        self.sock.connect(server_address)
 
+    def encrypt(self, message):
+        #print("in encrypt :   ", message) #for debugging
+        padding = ' '
+        pad = lambda s: s + (self.block_size - (len(s) % self.block_size)) * padding
+        IV = Random.new().read(AES.block_size)
+        cipher = AES.new(self.key, AES.MODE_CBC, IV)
+        paddedMessage = pad(message)
+        encoded = base64.b64encode(IV + cipher.encrypt(paddedMessage))
+        #print(encoded) #for debug
+        #print (type(encoded)) #for debug
+        return encoded
+
+    def sendData(self, message):
+        formattedAnswer = ("#"+ str(message) + "|" + str(self.voltage)\
+            + "|" + str(self.current) + "|" + str(self.power) + "|" + str(self.energy) + "|")
+        #print(formattedAnswer) #for debug
+        encryptedText = self.encrypt(formattedAnswer)
+        self.sock.send(encryptedText)
+
+if __name__ == '__main__':
+    if len(sys.argv) != 3:
+        print('Invalid number of arguments')
+        print('python server.py [IP address] [Port]')
+        sys.exit()
+
+    ip_addr = sys.argv[1]
+    port_num = int(sys.argv[2])
+    
+    pi = client(ip_addr, port_num)
 ##    if action == 'logout':
 ##        print('logout, bye')
 ##        sys.exit(1)
