@@ -195,6 +195,7 @@ if (handshake()):
          #print("Debug Loop: ", ignoreLoopCount, "Reading has taken: ", readEndTime - readTime, "ms", "Others have taken: ", current_milli_time()-readEndTime, "ms")
         #print("Number of frames dropped: ", numFrameDropped)
         data = []
+        #count = 0
         for i in range(1,5):
             data.append(np.fromstring(','.join(msg_rec[i].split(',')[4:]), dtype=float, sep=','))
         
@@ -206,9 +207,9 @@ if (handshake()):
             mlp_pred = int(mlp.predict(feature_extracted_segment))
             #print("MLP: ", mlp_pred)
             ovr_pred = int(ovr.predict(feature_extracted_segment))
-            # print(rfc_pred)
-            # print(mlp_pred)
-            # print(ovr_pred)
+            print("RFC: ", dance_move[rfc_pred])
+            print("MLP: ", dance_move[mlp_pred])
+            print("OVR: ", dance_move[ovr_pred])
             #print(rfc.predict_proba(feature_extracted_segment))
             #print(mlp.predict_proba(feature_extracted_segment))
             #print(ovr.predict_proba(feature_extracted_segment))
@@ -220,9 +221,10 @@ if (handshake()):
             segment = segment[16:]
 
             most_common,num_most_common = Counter(pred_list).most_common(1)[0]
-            if num_most_common > 1:
+            if num_most_common > 2:
                 pred_dance = dance_move[most_common]
-                print(pred_dance)
+                #count = count + 1
+                print("Prediction Sent: ", pred_dance)
 
                 if(pred_dance != 'rest'):
                     action = pred_dance
@@ -232,7 +234,7 @@ if (handshake()):
                     pi.power = powerReadings[2]
                     pi.energy = powerReadings[3]
                     pi.sendData(action)
-                    segment = []
-                    
-                time.sleep(1.1)
+
+                time.sleep(1.3)
+                segment = []
 
