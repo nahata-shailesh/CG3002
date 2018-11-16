@@ -232,6 +232,7 @@ if (handshake()):
                     pi.power = powerReadings[2]
                     pi.energy = powerReadings[3]
                     pi.sendData(action)
-                    time.sleep(1.1)
                     segment = []
+                    
+                time.sleep(1.1)
 

@@ -96,6 +96,21 @@ for i in range(len(file)):
         label.extend(y)
 
 
+# In[6]:
+
+
+
+
+
+# In[7]:
+
+
+
+
+
+# In[11]:
+
+
 feature_list=[]
 for i in range(int(len(data))):
     feature_list.append(feature_extraction(np.asarray(data[i])))
