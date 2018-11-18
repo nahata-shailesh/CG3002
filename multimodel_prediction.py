@@ -1,9 +1,6 @@
 
 # coding: utf-8
 
-# In[1]:
-
-
 from Crypto.Cipher import AES
 from Crypto import Random
 import serial
@@ -26,12 +23,6 @@ port.reset_output_buffer()
 
 ##serverflag = 0
 
-# In[2]:
-
-
-class client():
-    def __init__(self, ip_addr, port_num):
-        self.key = '3002300230023002'
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.block_size = 16
         self.voltage = 0
@@ -74,9 +65,6 @@ if __name__ == '__main__':
 ##    if action == 'logout':
 ##        print('logout, bye')
 ##        sys.exit(1)
-
-
-# In[3]:
 
 
 def readlineCR(port):
@@ -149,14 +137,10 @@ if (handshake()):
         message = readlineCR(port)
         #if(message):
             #print("Message:", message)
-            #port.write(sendData)
 
         if message:
-            #port.write(sendData)
-            #port.reset_output_buffer()
             readEndTime = current_milli_time()
             msg_rec = message.splitlines()
-            #msgCheckSum = message[last_comma+1:]
             msgCheckSum = int(msg_rec[5].strip('\x00'))
             #print("My checksum is: ", msgCheckSum)
             sentFrameID = int(msg_rec[0].strip(','))
@@ -195,7 +179,6 @@ if (handshake()):
          #print("Debug Loop: ", ignoreLoopCount, "Reading has taken: ", readEndTime - readTime, "ms", "Others have taken: ", current_milli_time()-readEndTime, "ms")
         #print("Number of frames dropped: ", numFrameDropped)
         data = []
-        #count = 0
         for i in range(1,5):
             data.append(np.fromstring(','.join(msg_rec[i].split(',')[4:]), dtype=float, sep=','))
         
@@ -205,14 +188,10 @@ if (handshake()):
             feature_extracted_segment = extract_feature(segment)
             rfc_pred = int(rfc.predict(feature_extracted_segment))
             mlp_pred = int(mlp.predict(feature_extracted_segment))
-            #print("MLP: ", mlp_pred)
             ovr_pred = int(ovr.predict(feature_extracted_segment))
             print("RFC: ", dance_move[rfc_pred])
             print("MLP: ", dance_move[mlp_pred])
             print("OVR: ", dance_move[ovr_pred])
-            #print(rfc.predict_proba(feature_extracted_segment))
-            #print(mlp.predict_proba(feature_extracted_segment))
-            #print(ovr.predict_proba(feature_extracted_segment))
             pred_list = []
             pred_list.append(rfc_pred)
             pred_list.append(mlp_pred)
@@ -223,7 +202,6 @@ if (handshake()):
             most_common,num_most_common = Counter(pred_list).most_common(1)[0]
             if num_most_common > 2:
                 pred_dance = dance_move[most_common]
-                #count = count + 1
                 print("Prediction Sent: ", pred_dance)
 
                 if(pred_dance != 'rest'):
