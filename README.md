@@ -13,7 +13,7 @@ Apart from having Python3 installed, the following libraries would also be requi
 These libraries could simply be installed by using the `pip3` installer command. Just enter `pip3 install <Library name>` to install a specific package. For eg: In order to install numpy, type `pip3 install numpy` on your commmand line.
 
 ## Run Prediction Script:
-Once installation of all the above packages is done, you are ready to run our prediction script `multimodel_prediction.py`. HOwever, make sure you have your server running and note down the IP Address of your server and the port at which it is running. Then simply enter `python3 multimodel_prediction.py <server ip> <port no>` to run the script.
+Once installation of all the above packages is done, you are ready to run our prediction script `multimodel_prediction.py`. However, make sure you have your server running and note down the IP Address of your server and the port at which it is running. Then simply enter `python3 multimodel_prediction.py <server ip> <port no>` to run the script.
 For eg: `python3 multimodel_prediction.py 192.168.43.230 5555`
 
 That's it! Now go ahead and dance as our system predicts all your dance moves!
