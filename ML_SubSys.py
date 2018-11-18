@@ -1,9 +1,6 @@
 
 # coding: utf-8
 
-# In[1]:
-
-
 import numpy as np
 import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
@@ -22,8 +19,6 @@ from sklearn.multiclass import OneVsRestClassifier
 from sklearn.svm import LinearSVC
 from sklearn.externals import joblib
 
-# In[2]:
-
 #data_path = '/Users/Shailesh/Documents/workspace/CG3002/training_data/feature_extracted_data/datasetSetFinal.csv'
 #label_path = '/Users/Shailesh/Documents/workspace/CG3002/training_data/feature_extracted_data/labelSetFinal.csv'
 
@@ -31,14 +26,9 @@ data_path = '/home/pi/Desktop/CG3002/training_data/feature_extracted_data/datase
 label_path = '/home/pi/Desktop/CG3002/training_data/feature_extracted_data/labelSetFinal.csv'
 
 
-# In[3]:
-
-
 data_df = pd.read_csv(data_path,header =None)
 label_df = pd.read_csv(label_path,header=None)
 
-
-# In[4]:
 
 data=np.asarray(data_df)
 label=np.asarray(label_df).flatten('F') #change to 1D vector
@@ -47,13 +37,9 @@ scaler = joblib.load('scaler.joblib')
 scaler.fit(data)
 data=scaler.transform(data)
 
-# In[5]:
-
 
 x_train, x_test, y_train, y_test = train_test_split(data,label, test_size=0.2, random_state = 4)
 
-
-# In[6]:
 
 
 mlp =MLPClassifier(random_state=4)
@@ -61,26 +47,18 @@ rfc=RandomForestClassifier(random_state=4)
 svc = LinearSVC()
 ovr = OneVsRestClassifier(svc)
 models =[]
-#models.append(ovr)
-#models.append(mlp)
+models.append(ovr)
+models.append(mlp)
 models.append(rfc)
 kf = StratifiedKFold(n_splits=5, random_state = 4)
 
 
-# In[7]:
-
-
 y_pred=[]
 for model in models:
-    # print("2")
     model.fit(data,label)
-    # print("3")
     y=model.predict(x_test)
     y_pred.append(y)  
     print(accuracy_score(y_test, y))
-
-
-# In[8]:
 
 
 #K-fold validation , KNN -> GNB -> RFC
@@ -89,7 +67,6 @@ for model in models:
    print(scores.mean())
 
 
-# In[9]:
 
 
 #confusion matrix  KNN -> GNB -> RFC
@@ -100,20 +77,17 @@ for model in models:
 #confusion_mat=[]
 for i in range(int(len(y_pred))):
    print(confusion_matrix(y_test, y_pred[i]))
-   # print(precision_recall_fscore_support(y_test, y_pred[i], average='micro'))
+   print(precision_recall_fscore_support(y_test, y_pred[i], average='micro'))
     
     
 
 
-# In[10]:
 
 
 target_names = ['rest', 'wiper', 'number7', 'chicken', 'sidestep', 'turnclap','number6','salute','mermaid','swing','cowboy','logout']
 for i in range(int(len(y_pred))):
    print(classification_report(y_test, y_pred[i], target_names=target_names))
 
-
-# In[11]:
 
 
 # importances = rfc.feature_importances_
@@ -128,14 +102,11 @@ for i in range(int(len(y_pred))):
 #     print("%d. feature %d (%f)" % (f + 1, indices[f], importances[indices[f]]))
 
 
-# In[12]:
 
 
 # import matplotlib.pyplot as plt
 # from sklearn.model_selection import learning_curveA# from sklearn.model_selection import ShuffleSplit
 
-
-# In[13]:
 
 
 # #taken from scikit learn
@@ -209,8 +180,6 @@ for i in range(int(len(y_pred))):
 #     return plt
 
 
-# In[14]:
-
 
 # title = "Learning Curves"
 # # Cross validation with 100 iterations to get smoother mean test and train
@@ -221,12 +190,10 @@ for i in range(int(len(y_pred))):
 # plt.show()
 
 
-# In[15]:
-
 
 from sklearn.externals import joblib
 joblib.dump(rfc, 'rfc_trained_2.joblib') 
-#joblib.dump(mlp, 'mlp_trained_2.joblib')
-#joblib.dump(ovr, 'ovr_trained_2.joblib')
-#joblib.dump(scaler, 'scaler.joblib')
+joblib.dump(mlp, 'mlp_trained_2.joblib')
+joblib.dump(ovr, 'ovr_trained_2.joblib')
+joblib.dump(scaler, 'scaler.joblib')
 
