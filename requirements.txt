@@ -1,6 +1,8 @@
-numpy==1.14.3
-scipy==1.1.0
-pandas==0.23.0
-pycrypto==2.6.1
-pyserial==3.4
-scikit_learn==0.20.0
+This file contains the libraries required in order to run files from this project
+
+##numpy==1.14.3
+##scipy==1.1.0
+##pandas==0.23.0
+##pycrypto==2.6.1
+##pyserial==3.4
+##scikit_learn==0.20.0
